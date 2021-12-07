@@ -1,0 +1,25 @@
+/* Document */
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+html {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  background: var(--color-dark);
+}
+
+body {
+  color: var(--color-white);
+  background: var(--color-body-background);
+}
+
+.is-nav-active,
+.is-nav-active body {
+  overflow: hidden;
+}
+
+.col-xs {
+  width: 50%;
+}
