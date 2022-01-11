@@ -13,8 +13,6 @@ const Button = ({
   className,
   activeTab,
 }: ButtonProps): JSX.Element => {
-  const Icon = icon;
-
   return (
     <button
       onClick={() => clickHandler(title)}

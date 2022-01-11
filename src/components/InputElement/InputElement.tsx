@@ -4,9 +4,6 @@ import CanvasContext from "../../store/canvas-context";
 // Types
 import { InputElementProps } from "./InputElement.props";
 
-// Styles
-import Styling from "./InputElement.styles";
-
 const InputElement = ({ inputElementName }: InputElementProps) => {
   const CanvasCtx = useContext(CanvasContext);
   console.log(CanvasCtx, inputElementName);

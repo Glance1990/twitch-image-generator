@@ -1,5 +1,3 @@
-import { ButtonHTMLAttributes, DetailedHTMLProps } from "react";
-
 export interface ButtonProps {
   title: string;
   icon?: ButtonIcons;

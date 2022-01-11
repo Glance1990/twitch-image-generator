@@ -8,11 +8,9 @@ export default function drawText(
   iconDisabled: boolean
 ) {
   const ctx = canvas.getContext("2d");
-  const iconBgcWidth = 80;
-  const iconBgcHeight = canvas.height;
   if (ctx) {
     // Сlean the canvas before the new cycle
-    ctx.clearRect(80, 0, canvas.width - 80, canvas.height);
+    ctx.clearRect(iconDisabled ? 0 : 80, 0, canvas.width - 80, canvas.height);
     // Set the canvas backround color and fill it
     ctx.fillStyle = "#101220";
     ctx.fillRect(80, 0, canvas.width, canvas.height);
@@ -28,6 +26,7 @@ export default function drawText(
       2;
     const posY = canvasCenter + textHeightCenter;
     const posX = iconDisabled ? 10 : 90;
+    console.log("posX", posX);
     // Put finaly text on the canvas
     ctx.fillText(text, posX, posY, 200);
   }

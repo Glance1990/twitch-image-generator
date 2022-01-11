@@ -33,6 +33,8 @@ function App({ className }: AppProps) {
   const fontWeight = String(CanvasCtx.fontWeight.value);
   const fontSize = CanvasCtx.fontSize.value + "px";
   const text = String(CanvasCtx.inputText.value);
+  const iconScale = Number(CanvasCtx.iconScale.value);
+  const iconShadowAngle = Number(CanvasCtx.iconShadowAngle.value);
 
   const [imgSrc, setImageSrc] = useState("");
 
@@ -44,12 +46,19 @@ function App({ className }: AppProps) {
   };
 
   const [iconDisabled, setIconState] = useState(false);
+  const [shadowState, setIconShadowState] = useState(true);
 
   // draw icon on canvas
   useEffect(() => {
     if (!canvasRef.current) return;
-    drawIcon(canvasRef.current, iconDisabled);
-  }, [iconDisabled]);
+    drawIcon(
+      canvasRef.current,
+      iconDisabled,
+      iconScale,
+      shadowState,
+      iconShadowAngle
+    );
+  }, [iconDisabled, iconScale, shadowState, iconShadowAngle]);
 
   const [fontFamily, setFontFamily] = useState("Oswald");
 
@@ -65,11 +74,9 @@ function App({ className }: AppProps) {
       text,
       iconDisabled
     );
-  }, [fontStyle, fontWeight, fontSize, fontFamily, text]);
+  }, [fontStyle, fontWeight, fontSize, fontFamily, text, iconDisabled]);
 
   const [openTab, setTab] = useState("General");
-
-  const [iconShadow, setIconShadowState] = useState(true);
 
   interface Map {
     [key: string]: string;
@@ -158,6 +165,19 @@ function App({ className }: AppProps) {
               />
             </label>
           </div>
+          <InputElement inputElementName={InputElementTypes.iconScale} />
+          <div className="Icon">
+            <span>Sahdow </span>
+            <label>
+              Enable Icon Shadow
+              <input
+                type="checkbox"
+                checked={shadowState}
+                onChange={(e) => setIconShadowState(e.target.checked)}
+              />
+            </label>
+          </div>
+          <InputElement inputElementName={InputElementTypes.iconShadowAngle} />
         </Tab>
         <Tab title="Effects" opened={openTab}>
           <InputElement inputElementName={InputElementTypes.inputText} />
