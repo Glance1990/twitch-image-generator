@@ -2,6 +2,34 @@ function translateToCenter(ctx: CanvasRenderingContext2D) {
   ctx.translate(ctx.canvas.width / 2.0, ctx.canvas.height / 2.0);
 }
 
+function colorizeImage(
+  image: HTMLImageElement,
+  color: string = "000000"
+): HTMLCanvasElement {
+  var tempCanvas = document.createElement("canvas");
+  var tempCtx = tempCanvas.getContext("2d");
+  tempCanvas.width = image.width;
+  tempCanvas.height = image.height;
+  if (tempCtx) {
+    tempCtx.fillStyle = color;
+    tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+    tempCtx.globalCompositeOperation = "destination-atop";
+    if (image.src.includes("svg")) {
+      var tempTempCanvas = document.createElement("canvas");
+      var tempTempCtx = tempTempCanvas.getContext("2d");
+      tempTempCanvas.width = tempCanvas.width;
+      tempTempCanvas.height = tempCanvas.height;
+      if (tempTempCtx !== null) {
+        tempTempCtx.drawImage(image, 0, 0);
+        tempCtx.drawImage(tempTempCanvas, 0, 0);
+      }
+    } else {
+      tempCtx.drawImage(image, 0, 0);
+    }
+  }
+  return tempCanvas;
+}
+
 function memoize(func: Function) {
   var cache = new Map();
   return function (...args: number[]) {
@@ -109,7 +137,7 @@ function drawShadow(
   outCtx.save();
   var strokes = calculateShadowStrokes(
     image,
-    containerSize,
+    containerSize * 2,
     iconSize,
     angleDegrees,
     xOffset,
@@ -151,14 +179,20 @@ export default async function drawIcon(
   iconDisabled: boolean,
   iconScale: number,
   shadowState: boolean,
-  iconShadowAngle: number
+  iconShadowAngle: number,
+  backgroundColor: string = "#23b85e",
+  shadowColor: string,
+  horizontalPositionIcon: number,
+  verticalPositionIcon: number,
+  iconColor?: string
 ) {
   const ctx = canvas.getContext("2d");
-  const iconBgcWidth = 80;
+  const iconBgcWidth = canvas.height;
   const canvasHeight = canvas.height;
-  const iconBgcHeight = canvas.height;
-  if (ctx) {
+  if (ctx && !iconDisabled) {
     ctx.clearRect(0, 0, iconBgcWidth, ctx.canvas.height);
+    ctx.fillStyle = backgroundColor;
+    ctx.fillRect(0, 0, canvas.height, canvas.height);
     ctx.save();
     var superSample = 2;
     var iconRatio = (iconScale / 100.0) * 0.75;
@@ -175,8 +209,8 @@ export default async function drawIcon(
       var extraShadowRoom = Math.abs(0) + Math.abs(0);
       containerSize = containerSize + extraShadowRoom;
       // let angleDegrees = 130;
-      var imgSrc = "./icons/ExtraLife.png";
-      var image = await loadImage(imgSrc, true);
+      let imgSrc = "./icons/ExtraLife.png";
+      let image = await loadImage(imgSrc, true);
       if (shadowState) {
         drawShadow(
           image,
@@ -184,89 +218,32 @@ export default async function drawIcon(
           iconSize,
           tempCtx,
           iconShadowAngle,
-          "red",
-          0,
-          0
+          shadowColor,
+          horizontalPositionIcon,
+          verticalPositionIcon
         );
       }
 
       //tempCtx.drawImage(image, (h / 2) * superSample - iconSize / 2 + settings.iconOffsetX, (h / 2) * superSample - iconSize / 2 - settings.iconOffsetY, iconSize, iconSize);
+      let colorImage;
+      if (iconColor) {
+        colorImage = colorizeImage(image, iconColor);
+      }
 
       tempCtx.drawImage(
-        image,
-        (canvasHeight / 2) * superSample - iconSize / 2,
-        (canvasHeight / 2) * superSample - iconSize / 2,
+        colorImage ? colorImage : image,
+        (canvasHeight / 2) * superSample -
+          iconSize / 2 +
+          horizontalPositionIcon,
+        (canvasHeight / 2) * superSample - iconSize / 2 + verticalPositionIcon,
         iconSize,
         iconSize
       );
-      //ctx.globalCompositeOperation = "source-atop";
+      ctx.globalCompositeOperation = "source-atop";
       ctx.drawImage(tempCanvas, 0, 0, canvasHeight, canvasHeight);
 
       ctx.restore();
       //ctx.drawImage(tempCanvas, settings.alignment == "right" ? w - h : 0, 0, h, h);
     }
-
-    // if (settings.colorizeIcon) {
-    //     image = colorizeImage(image, settings.iconColor);
-    // }
-
-    // Set the backround color for the icon image on the left
-
-    // if (!iconDisabled) {
-    //   ctx.imageSmoothingEnabled = true;
-    //   ctx.imageSmoothingQuality = "high";
-    //   ctx.fillStyle = "#23b85e";
-    //   ctx.rect(0, 0, iconBgcWidth, iconBgcHeight);
-    //   ctx.fill();
-    //   // Draw a certain icon on canvas
-    //   const scaleFactor = iconScale / 100;
-    //   const iconWidth = 65 * scaleFactor;
-    //   const iconHeight = 65 * scaleFactor;
-    //   const iconPositionX = iconBgcWidth / 2 - iconWidth / 2;
-    //   const iconPositionY = iconBgcHeight / 2 - iconHeight / 2;
-    //   const img = new Image();
-
-    //   // Draw the image
-    //   img.src = "./icons/ExtraLife.png";
-    //   console.log(img);
-    //   img.addEventListener("load", function () {
-    //     if (shadowState) {
-    //       // Adding a loop to draw a shadow
-    //       for (var x = 5; x < 60; x++) {
-    //         // Add shadow
-    //         ctx.shadowColor = "grey";
-    //         ctx.shadowBlur = 1;
-    //         ctx.shadowOffsetX = -x;
-    //         ctx.shadowOffsetY = x;
-
-    //         // Draw icon (with the shadow that was set above)
-    //         ctx.drawImage(
-    //           img,
-    //           iconPositionX,
-    //           iconPositionY,
-    //           iconWidth,
-    //           iconHeight
-    //         );
-    //       }
-
-    //       // Remove shadow
-    //       ctx.shadowColor = "transparent";
-    //       ctx.shadowBlur = 0;
-    //       ctx.shadowOffsetX = 0;
-    //       ctx.shadowOffsetY = 0;
-    //     } else {
-    //       // Draw icon (with the shadow that was set above)
-    //       ctx.drawImage(
-    //         img,
-    //         iconPositionX,
-    //         iconPositionY,
-    //         iconWidth,
-    //         iconHeight
-    //       );
-    //     }
-
-    //     // ctx.drawImage(img, iconPositionX, iconPositionY, iconWidth, iconHeight);
-    //   });
-    // }
   }
 }

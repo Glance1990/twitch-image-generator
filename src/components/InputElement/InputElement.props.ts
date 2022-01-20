@@ -8,4 +8,10 @@ export enum InputElementTypes {
   fontWeight = "fontWeight",
   iconScale = "iconScale",
   iconShadowAngle = "iconShadowAngle",
+  horizontalPositionText = "horizontalPositionText",
+  verticalPositionText = "verticalPositionText",
+  horizontalPositionIcon = "horizontalPositionIcon",
+  verticalPositionIcon = "verticalPositionIcon",
+  panelHeight = "panelHeight",
+  borderRadius = "borderRadius",
 }

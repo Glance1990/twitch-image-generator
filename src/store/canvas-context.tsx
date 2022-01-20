@@ -23,6 +23,12 @@ export interface AppContext {
   fontStyleItalic: simpleProperty;
   iconScale: inputItem;
   iconShadowAngle: inputItem;
+  borderRadius: inputItem;
+  horizontalPositionText: inputItem;
+  verticalPositionText: inputItem;
+  horizontalPositionIcon: inputItem;
+  verticalPositionIcon: inputItem;
+  panelHeight: inputItem;
 }
 
 const CanvasContext = createContext<AppContext>({
@@ -72,6 +78,60 @@ const CanvasContext = createContext<AppContext>({
     inputStep: 1,
     updateValue: (val) => {},
   },
+  borderRadius: {
+    value: 0,
+    label: "Border Radius (%)",
+    type: "range",
+    inputMin: 0,
+    inputMax: 120,
+    inputStep: 1,
+    updateValue: (val) => {},
+  },
+  panelHeight: {
+    value: 85,
+    label: "Panel Height",
+    type: "range",
+    inputMin: 60,
+    inputMax: 85,
+    inputStep: 1,
+    updateValue: (val) => {},
+  },
+  horizontalPositionText: {
+    value: 0,
+    label: "Horizontal Position",
+    type: "range",
+    inputMin: -10,
+    inputMax: 150,
+    inputStep: 1,
+    updateValue: (val) => {},
+  },
+  verticalPositionText: {
+    value: 0,
+    label: "Vertical Position",
+    type: "range",
+    inputMin: -40,
+    inputMax: 40,
+    inputStep: 1,
+    updateValue: (val) => {},
+  },
+  horizontalPositionIcon: {
+    value: 0,
+    label: "Horizontal Position Offset",
+    type: "range",
+    inputMin: -50,
+    inputMax: 50,
+    inputStep: 1,
+    updateValue: (val) => {},
+  },
+  verticalPositionIcon: {
+    value: 0,
+    label: "Vertical Position Offset",
+    type: "range",
+    inputMin: -50,
+    inputMax: 50,
+    inputStep: 1,
+    updateValue: (val) => {},
+  },
 });
 
 export const CanvasContextProvider: React.FC = ({ children }) => {
@@ -81,6 +141,12 @@ export const CanvasContextProvider: React.FC = ({ children }) => {
   const [fontStyle, setFontStyle] = useState(false);
   const [iconScale, setIconScale] = useState(80);
   const [iconShadowAngle, setIconShadowAngle] = useState(45);
+  const [borderRadius, setBorderRadius] = useState(0);
+  const [horizontalPositionText, setHorizontalPositionText] = useState(0);
+  const [verticalPositionText, setVerticalPositionText] = useState(0);
+  const [horizontalPositionIcon, setHorizontalPositionIcon] = useState(-20);
+  const [verticalPositionIcon, setVerticalPositionIcon] = useState(0);
+  const [panelHeight, setPanelHeight] = useState(85);
 
   function changeInputTextHandler(val: any): void {
     changeInputText(val);
@@ -104,6 +170,30 @@ export const CanvasContextProvider: React.FC = ({ children }) => {
 
   function changeIconShadowAngle(val: any): void {
     setIconShadowAngle(val);
+  }
+
+  function changeBorderRadius(val: any): void {
+    setBorderRadius(val);
+  }
+
+  function changePanelHeight(val: any): void {
+    setPanelHeight(val);
+  }
+
+  function changeHorizontalPositionText(val: any): void {
+    setHorizontalPositionText(val);
+  }
+
+  function changeVerticalPositionText(val: any): void {
+    setVerticalPositionText(val);
+  }
+
+  function changeHorizontalPositionIcon(val: any): void {
+    setHorizontalPositionIcon(val);
+  }
+
+  function changeVerticalPositionIcon(val: any): void {
+    setVerticalPositionIcon(val);
   }
 
   const context = {
@@ -152,6 +242,60 @@ export const CanvasContextProvider: React.FC = ({ children }) => {
       inputMax: 360,
       inputStep: 1,
       updateValue: changeIconShadowAngle,
+    },
+    borderRadius: {
+      value: borderRadius,
+      label: "Border Radius (%)",
+      type: "range",
+      inputMin: 0,
+      inputMax: 120,
+      inputStep: 1,
+      updateValue: changeBorderRadius,
+    },
+    panelHeight: {
+      value: panelHeight,
+      label: "Panel Height",
+      type: "range",
+      inputMin: 60,
+      inputMax: 85,
+      inputStep: 1,
+      updateValue: changePanelHeight,
+    },
+    horizontalPositionText: {
+      value: horizontalPositionText,
+      label: "Horizontal Position",
+      type: "range",
+      inputMin: -10,
+      inputMax: 150,
+      inputStep: 1,
+      updateValue: changeHorizontalPositionText,
+    },
+    verticalPositionText: {
+      value: verticalPositionText,
+      label: "Vertical Position",
+      type: "range",
+      inputMin: -40,
+      inputMax: 40,
+      inputStep: 1,
+      updateValue: changeVerticalPositionText,
+    },
+    horizontalPositionIcon: {
+      value: horizontalPositionIcon,
+      label: "Horizontal Position Offset",
+      type: "range",
+      inputMin: -50,
+      inputMax: 50,
+      inputStep: 1,
+      updateValue: changeHorizontalPositionIcon,
+    },
+    verticalPositionIcon: {
+      value: verticalPositionIcon,
+      label: "Vertical Position Offset",
+      type: "range",
+      inputMin: -50,
+      inputMax: 50,
+      inputStep: 1,
+      updateValue: changeVerticalPositionIcon,
     },
   };
 

@@ -4,13 +4,19 @@ import { useRef, useEffect, useState, useContext } from "react";
 // Components
 import InputElement from "./components/InputElement/InputElement";
 import Tab from "./components/Tab/Tab";
+import ColorPicker from "./components/ColorPicker/ColorPicker";
 
 // Store
 import CanvasContext from "./store/canvas-context";
 import Button from "./components/Button/Button";
 
 // Canvas draw methods
-import { drawIcon, drawText, saveCanvasImage } from "./canvasMethods";
+import {
+  drawIcon,
+  drawText,
+  saveCanvasImage,
+  drawBorder,
+} from "./canvasMethods";
 
 // Types
 import { InputElementTypes } from "./components/InputElement/InputElement.props";
@@ -18,7 +24,6 @@ import { ButtonIcons } from "./components/Button/Button.props";
 
 // Styles
 import Styling from "./App.styles.js";
-
 import WebFont from "webfontloader";
 
 interface AppProps {
@@ -35,8 +40,19 @@ function App({ className }: AppProps) {
   const text = String(CanvasCtx.inputText.value);
   const iconScale = Number(CanvasCtx.iconScale.value);
   const iconShadowAngle = Number(CanvasCtx.iconShadowAngle.value);
+  const borderRadius = Number(CanvasCtx.borderRadius.value);
+  const panelHeight = Number(CanvasCtx.panelHeight.value);
+  const horizontalPositionText = Number(CanvasCtx.horizontalPositionText.value);
+  const verticalPositionText = Number(CanvasCtx.verticalPositionText.value);
+  const horizontalPositionIcon = Number(CanvasCtx.horizontalPositionIcon.value);
+  const verticalPositionIcon = Number(CanvasCtx.verticalPositionIcon.value);
 
   const [imgSrc, setImageSrc] = useState("");
+  const [color, updateColor] = useState("#d94545");
+  const [textColor, updateTextColor] = useState("#ffffff");
+  const [textBackgroundColor, updateTextBackgroundColor] = useState("#101220");
+  const [shadowColor, updateShadowColor] = useState("#982525");
+  const [iconColor, updateIconColor] = useState("#ffffff");
 
   // Save image
   const saveImage = () => {
@@ -56,9 +72,26 @@ function App({ className }: AppProps) {
       iconDisabled,
       iconScale,
       shadowState,
-      iconShadowAngle
+      iconShadowAngle,
+      color,
+      shadowColor,
+      horizontalPositionIcon,
+      verticalPositionIcon,
+      iconColor
     );
-  }, [iconDisabled, iconScale, shadowState, iconShadowAngle]);
+    drawBorder(canvasRef.current, 5, borderRadius, "green");
+  }, [
+    iconDisabled,
+    iconScale,
+    shadowState,
+    iconShadowAngle,
+    color,
+    shadowColor,
+    iconColor,
+    horizontalPositionIcon,
+    verticalPositionIcon,
+    panelHeight,
+  ]);
 
   const [fontFamily, setFontFamily] = useState("Oswald");
 
@@ -72,9 +105,32 @@ function App({ className }: AppProps) {
       fontSize,
       fontFamily,
       text,
-      iconDisabled
+      iconDisabled,
+      horizontalPositionText,
+      verticalPositionText,
+      textBackgroundColor,
+      textColor
     );
-  }, [fontStyle, fontWeight, fontSize, fontFamily, text, iconDisabled]);
+    drawBorder(canvasRef.current, 5, borderRadius, "green");
+  }, [
+    fontStyle,
+    fontWeight,
+    fontSize,
+    fontFamily,
+    text,
+    iconDisabled,
+    horizontalPositionText,
+    verticalPositionText,
+    panelHeight,
+    textBackgroundColor,
+    textColor,
+  ]);
+
+  // draw border
+  useEffect(() => {
+    if (!canvasRef.current) return;
+    drawBorder(canvasRef.current, 5, borderRadius, "green");
+  }, [borderRadius]);
 
   const [openTab, setTab] = useState("General");
 
@@ -138,9 +194,8 @@ function App({ className }: AppProps) {
           activeTab={openTab}
         />
         <Tab title="General" opened={openTab}>
+          <h3>Text</h3>
           <InputElement inputElementName={InputElementTypes.inputText} />
-          <InputElement inputElementName={InputElementTypes.fontSize} />
-          <InputElement inputElementName={InputElementTypes.fontWeight} />
           <div className="select-wrapper">
             <label htmlFor="fontFamily">Font Family</label>
             <select
@@ -154,7 +209,11 @@ function App({ className }: AppProps) {
               <option value="Roboto">Roboto</option>
             </select>
           </div>
+          <InputElement inputElementName={InputElementTypes.fontWeight} />
+          <InputElement inputElementName={InputElementTypes.fontSize} />
           <button onClick={() => changeFontStyleItalic()}>Style Italic</button>
+          <hr />
+          <h3>Icon</h3>
           <div className="Icon">
             <span>Icon </span>
             <label>
@@ -166,8 +225,11 @@ function App({ className }: AppProps) {
             </label>
           </div>
           <InputElement inputElementName={InputElementTypes.iconScale} />
+          <hr />
+        </Tab>
+        <Tab title="Effects" opened={openTab}>
+          <h3>Shadow</h3>
           <div className="Icon">
-            <span>Sahdow </span>
             <label>
               Enable Icon Shadow
               <input
@@ -178,30 +240,72 @@ function App({ className }: AppProps) {
             </label>
           </div>
           <InputElement inputElementName={InputElementTypes.iconShadowAngle} />
-        </Tab>
-        <Tab title="Effects" opened={openTab}>
-          <InputElement inputElementName={InputElementTypes.inputText} />
-          <InputElement inputElementName={InputElementTypes.fontSize} />
+          <hr />
+          <h3>Border</h3>
+          <InputElement inputElementName={InputElementTypes.borderRadius} />
         </Tab>
         <Tab title="Colors" opened={openTab}>
-          <InputElement inputElementName={InputElementTypes.inputText} />
-          <InputElement inputElementName={InputElementTypes.fontSize} />
-          <InputElement inputElementName={InputElementTypes.fontWeight} />
-          <InputElement inputElementName={InputElementTypes.fontWeight} />
-          <InputElement inputElementName={InputElementTypes.fontWeight} />
+          <h3>Text</h3>
+          <p>
+            Text Color
+            <ColorPicker color={textColor} onChangeHandler={updateTextColor} />
+          </p>
+          <hr />
+          <h3>Background</h3>
+          <p>
+            Icon Background Color
+            <ColorPicker
+              color={shadowColor}
+              onChangeHandler={updateShadowColor}
+            />
+          </p>
+          <p>
+            Text Background Color
+            <ColorPicker
+              color={textBackgroundColor}
+              onChangeHandler={updateTextBackgroundColor}
+            />
+          </p>
+          <hr />
+          <h3>Icon</h3>
+          <p>
+            Icon Color
+            <ColorPicker color={iconColor} onChangeHandler={updateIconColor} />
+          </p>
+          <hr />
+          <h3>Effects</h3>
+          <p>
+            Shadow Color
+            <ColorPicker color={color} onChangeHandler={updateColor} />
+          </p>
+          <hr />
         </Tab>
         <Tab title="Positioning" opened={openTab}>
-          <InputElement inputElementName={InputElementTypes.inputText} />
-          <InputElement inputElementName={InputElementTypes.fontSize} />
-          <InputElement inputElementName={InputElementTypes.inputText} />
-          <InputElement inputElementName={InputElementTypes.fontSize} />
+          <h3>General</h3>
+          <InputElement inputElementName={InputElementTypes.panelHeight} />
+          <hr />
+          <h3>Text</h3>
+          <InputElement
+            inputElementName={InputElementTypes.horizontalPositionText}
+          />
+          <InputElement
+            inputElementName={InputElementTypes.verticalPositionText}
+          />
+          <hr />
+          <h3>Icon</h3>
+          <InputElement
+            inputElementName={InputElementTypes.horizontalPositionIcon}
+          />
+          <InputElement
+            inputElementName={InputElementTypes.verticalPositionIcon}
+          />
         </Tab>
       </div>
       <div className="col demonstration-tab">
         <h2>Live View & Download</h2>
         <p>Check your design and download transparent .PNG panels.</p>
         <div className="canvasWraper">
-          <canvas ref={canvasRef} width={320} height={85} />
+          <canvas ref={canvasRef} width={320} height={panelHeight} />
         </div>
       </div>
       <a href={imgSrc} download="your-image.png" onClick={saveImage}>
