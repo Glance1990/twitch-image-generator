@@ -145,7 +145,16 @@ export default function Styling(element) {
             }
             input[type='color'] {
                 height: 40px;
+                width: 40px;
                 border: none;
+                -webkit-appearance: none;
+                appearance: none;
+                background-color: transparent;
+                &::-webkit-color-swatch,
+                &::-moz-color-swatch {
+                    border-radius: 50%;
+                    border: 1px solid white;
+                }
             }
         }
     `
