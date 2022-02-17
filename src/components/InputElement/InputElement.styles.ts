@@ -1,13 +1,10 @@
-import styled from "styled-components";
+import styled from 'styled-components'
 
-const Styling = (Component: any) => {
-  return styled(Component)`
-    display: flex;
-    flex-wrap: wrap;
-    label {
-      width: 50%;
+const Styling = (Component: any) => styled(Component)`
+    .title {
+        display: block;
+        margin-bottom: 10px;
     }
-  `;
-};
+`
 
-export default Styling;
+export default Styling
