@@ -1,9 +1,8 @@
-import styled from "styled-components";
+import styled from 'styled-components'
 
-const Styling = (Component: any) => {
-  return styled(Component)`
-    background-color: var(--color-button);
-    color: var(--color-white);
+const Styling = (Component: any) => styled(Component)`
+    background-color: var(--tab-color);
+    color: var(--white);
     text-transform: capitalize;
     border: none;
     padding: 12px 36px;
@@ -14,19 +13,18 @@ const Styling = (Component: any) => {
     display: inline-flex;
     transition: all 0.3s ease-in-out;
     &.active {
-      background-color: var(--color-button-active);
+        background-color: var(--tab-color-active);
     }
     &:hover {
-      cursor: pointer;
-      &:not(.active) {
-        background-color: var(--color-button-hover);
-      }
+        cursor: pointer;
+        &:not(.active) {
+            background-color: var(--tab-color-hover);
+        }
     }
     svg {
-      margin-right: 10px;
-      font-size: 18px;
+        margin-right: 10px;
+        font-size: 18px;
     }
-  `;
-};
+`
 
-export default Styling;
+export default Styling
